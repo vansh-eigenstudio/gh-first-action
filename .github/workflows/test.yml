@@ -1,0 +1,18 @@
+name: Test Project 
+on: push 
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: get the code 
+        uses: actions/checkout@v3
+      - name: Install node js #though it is preinstalled in ubuut latest but we are using it for learning purpose
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm ci # we can also use npm install but we are not using it as npm ci oly download specific version of the dependencies mentioned in package-lock.json file
+      - name: Run tests
+        run: npm test
+  
+  
