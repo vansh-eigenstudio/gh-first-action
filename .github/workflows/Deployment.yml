@@ -1,37 +1,36 @@
 name: Deploy
 on: push
 jobs:    
-  Build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get the code
-        uses: actions/checkout@v3
-      - name: Installing the dependencies
-        run: npm ci
-      - name: Linting the code
-        run: npm run lint
-      - name: Building the code
-        run: npm run build
+    Lint:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Get the code
+          uses: actions/checkout@v3 
+        - name: Installing the dependencies
+          run: npm ci
+        - name: Linting the code
+          run: npm run lint
+    Test:
+      needs: Lint
+      runs-on: ubuntu-latest
+      steps:
+        - name: Get the code
+          uses: actions/checkout@v3
+        - name: Installing the dependencies
+          run: npm ci
+        - name: Test the code
+          run: npm run test
 
-  Test:
-    needs: Build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get the code
-        uses: actions/checkout@v3
-      - name: Installing the dependencies
-        run: npm ci
-      - name: Test the code
-        run : npm run test
-
-  Deployed:
-    needs: Test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get the code
-        uses: actions/checkout@v3
-      - name: Installing the dependencies
-        run: npm ci
-      - name: Deploy the code
-        run: echo "Code Deploy"
-      
+    Deployed:
+      needs: Test
+      runs-on: ubuntu-latest
+      steps:
+        - name: Get the code
+          uses: actions/checkout@v3
+        - name: Installing the dependencies
+          run: npm ci
+        - name: Building the code
+          run: npm run build
+        - name: Deploy the code
+          run: echo "Code Deploy"
+        
