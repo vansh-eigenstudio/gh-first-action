@@ -9,6 +9,7 @@ jobs:
               echo "Hello Everyone"
               echo "Hello Vansh"
       - name: Print goodbye
-        run: echo "Goodbye"
+        run: |
+            echo "Goodbye"
              echo "vansh"
         
