@@ -1,35 +1,35 @@
-name: Test Project 
-on: push 
-jobs:
-  test:
+name: Deploy
+on: push
+jobs:    
+  Build:
     runs-on: ubuntu-latest
     steps:
-      - name: get the code 
+      - name: Get the code
         uses: actions/checkout@v3
-      - name: Install node js #though it is preinstalled in ubuut latest but we are using it for learning purpose
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - name: Install dependencies
-        run: npm ci # we can also use npm install but we are not using it as npm ci oly download specific version of the dependencies mentioned in package-lock.json file
-      - name: Run tests
-        run: npm test
-  
-  deploy:
-    needs: test
-    runs-on : ubuntu-latest
-    steps:
-      - name: get the code
-        uses: actions/checkout@v3
-      - name: Install node js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - name: Install dependencies
+      - name: Installing the dependencies
         run: npm ci
-      - name: Build Project 
+      - name: Building the code
         run: npm run build
-      - name: deploy
-        run: echo "Deploying to server..." 
 
-    
+  Test:
+    needs: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v3
+      - name: Installing the dependencies
+        run: npm ci
+      - name: Test the code
+        run : npm run test
+
+  Deployed:
+    needs: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v3
+      - name: Installing the dependencies
+        run: npm ci
+      - name: Deploy the code
+        run: echo "Code Deploy"
+      
