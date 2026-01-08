@@ -31,6 +31,13 @@ jobs:
         run: npm ci
       - name: Build the code
         run: npm run build
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist-files
+          path: |
+            dist
+            package.json
   Deploy:
     runs-on: ubuntu-latest
     steps: 
