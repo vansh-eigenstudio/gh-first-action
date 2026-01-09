@@ -4,6 +4,8 @@ on:
     branches:
       - main
   workflow_dispatch:
+env:
+  MONGODB_DB_NAME: GHA-DEMO
 jobs:
   Lint:
     runs-on: ubuntu-latest
@@ -20,6 +22,11 @@ jobs:
       - name: Lint the code
         run: npm run lint
   Test:
+    env: # these env variables will be used only in this job
+      MONGODB_CLUSTER_ADDRESS : anyadress 
+      MONGODB_USERNAME: username
+      MONGODB_PASSWORD: password
+      PORT: 8080
     runs-on: ubuntu-latest
     steps:  
       - name: Get the code
@@ -31,8 +38,12 @@ jobs:
           key: depsnode-node-${{ hashFiles('**/package-lock.json') }}
       - name: Install the dependencies
         run: npm ci
+      - name: Run the code
+        run: npm start & npx wait-on http://127.0.0.1:$PORT # this is hwo we used the env variable PORT
       - name: Test the code
         run: npm run test
+      - name: Output the username
+        run: echo "Username is ${{ env.MONGODB_USERNAME }}"  # we can also access env variable like this 
   Build:
     runs-on: ubuntu-latest
     outputs:
