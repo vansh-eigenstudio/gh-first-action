@@ -9,6 +9,7 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: './src/test/setup.js',
     reporters: ['json'],
-    outputFile: 'test.json'
+    outputFile: 'test.json',
+    exclude: ['node_modules', 'dist', 'tests']
   },
 });
