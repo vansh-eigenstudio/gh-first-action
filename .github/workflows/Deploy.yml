@@ -10,26 +10,30 @@ jobs:
     steps:
       - name: Get the code
         uses: actions/checkout@v3
-      - name:  Cache dependencies
+      - name: Cache dependencies
+        id: cache
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: node_modules
           key: depsnode-node-${{ hashFiles('**/package-lock.json') }}
       - name: Install the dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Lint the code
         run: npm run lint
   Test:
     runs-on: ubuntu-latest
-    steps:  
+    steps:
       - name: Get the code
         uses: actions/checkout@v3
-      - name:  Cache dependencies
+      - name: Cache dependencies
+        id: cache
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: node_modules
           key: depsnode-node-${{ hashFiles('**/package-lock.json') }}
       - name: Install the dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Test the code
         id: test
@@ -46,31 +50,30 @@ jobs:
     steps:
       - name: Get the code
         uses: actions/checkout@v3
-      - name:  Cache dependencies
+      - name: Cache dependencies
+        id: cache
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: node_modules
           key: depsnode-node-${{ hashFiles('**/package-lock.json') }}
       - name: Install the dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Build the code
-        run: npm run build  
+        run: npm run build
       - name: Upload the artifacts
         uses: actions/upload-artifact@v4
         with:
-            name: dist-files
-            path: dist
-  
+          name: dist-files
+          path: dist
+
   Deploy:
     needs: Build
     runs-on: Ubuntu-latest
     steps:
-        - name: Download the artifacts
-          uses: actions/download-artifact@v4
-          with:
-            name: dist-files
-        - name: Deploy
-          run: echo "Deployed to the server"
-
-
-
+      - name: Download the artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-files
+      - name: Deploy
+        run: echo "Deployed to the server"
