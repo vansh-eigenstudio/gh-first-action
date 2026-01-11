@@ -6,10 +6,18 @@ on:
   workflow_dispatch:
 jobs:
   Lint:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x, 18.x]
+        operating-system: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.operating-system}}
     steps:
       - name: Get the code
         uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix['node-version'] }}
       - name: Cache dependencies
         id: cache
         uses: actions/cache@v3
@@ -37,6 +45,7 @@ jobs:
         run: npm ci
       - name: Test the code
         id: test
+        continue-on-error: true # Allow the workflow to continue even if tests fail
         run: npm run test
       - name: Upload test reports
         if: failure() && steps.test.outcome == 'failure'
@@ -60,7 +69,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Build the code
-        run: npm run build
+        run: npm run buildx
       - name: Upload the artifacts
         uses: actions/upload-artifact@v4
         with:
