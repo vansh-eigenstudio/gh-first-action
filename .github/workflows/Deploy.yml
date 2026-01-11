@@ -8,8 +8,8 @@ jobs:
   Lint:
     strategy:
       matrix:
-        node-version: [16.x, 18.x]
-        operating-system: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [16]
+        operating-system: [ubuntu-latest]
     runs-on: ${{ matrix.operating-system}}
     steps:
       - name: Get the code
@@ -78,11 +78,4 @@ jobs:
 
   Deploy:
     needs: Build
-    runs-on: Ubuntu-latest
-    steps:
-      - name: Download the artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: dist-files
-      - name: Deploy
-        run: echo "Deployed to the server"
+    uses: ./.github/workflows/deployuse.yml

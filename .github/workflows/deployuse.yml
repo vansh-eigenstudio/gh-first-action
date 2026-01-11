@@ -1,0 +1,12 @@
+name: Reusable workflow
+on: workflow_call
+jobs:
+    Deploy:
+        runs-on: Ubuntu-latest
+        steps:
+          - name: Download the artifacts
+            uses: actions/download-artifact@v4
+            with:
+              name: dist-files
+          - name: Deploy
+            run: echo "Deployed to the server"
