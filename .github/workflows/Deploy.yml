@@ -79,3 +79,5 @@ jobs:
   Deploy:
     needs: Build
     uses: ./.github/workflows/deployuse.yml
+    with:
+      artifact-name: dist-files
