@@ -32,8 +32,10 @@ jobs:
       - name: Install the dependencies
         run: npm ci
       - name: Test the code
+        id: test
         run: npm run test
       - name: Upload test reports
+        if: failure() && steps.test.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
           name: test-reports
