@@ -81,3 +81,9 @@ jobs:
     uses: ./.github/workflows/deployuse.yml
     with:
       artifact-name: dist-files
+  print-deploy-result:
+    needs: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print deployment result
+        run: echo "${{ needs.Deploy.outputs.result }}"
