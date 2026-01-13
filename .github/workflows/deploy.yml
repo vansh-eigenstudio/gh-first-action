@@ -56,7 +56,7 @@ jobs:
               uses: actions/cache@v3
               with:
                 path: node_modules
-                key: depsnode-node-${{ hashFiles('**/package-lock.json') }}
+                key: deps-node-module-${{ hashFiles('**/package-lock.json') }}
             - name: Install the dependencies
               if: steps.cache.outputs.cache-hit != 'true'
               run: npm ci
@@ -74,7 +74,7 @@ jobs:
             artifact_name: dist-files   
     print_deploy_result:
         needs: Deploy
-        runs-on: ubunut-latest
+        runs-on: ubuntu-latest
         steps:
             - name: Print the deploy result
               run: echo "Deployment result is ${{ needs.Deploy.outputs.result }}"

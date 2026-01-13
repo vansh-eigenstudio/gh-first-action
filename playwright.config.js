@@ -4,6 +4,7 @@
  */
 const config = {
   testDir: './tests',
+  testMatch: '**/*.pw.js',
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
   expect: {
