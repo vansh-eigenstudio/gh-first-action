@@ -5,22 +5,22 @@ on:
       - main
   workflow_dispatch:
 jobs:
-    # Lint:
-    #     runs-on: ubuntu-latest
-    #     steps:
-    #         - name: Gert the code
-    #           uses: actions/checkout@v3
-    #         - name: Cache the dependencies
-    #           id: cache
-    #           uses: actions/cache@v3
-    #           with:
-    #             path: node_modules
-    #             key: deps-node-module-${{ hashFiles('**/package-lock.json') }}
-    #         - name: Install the dependencies
-    #           if: steps.cache.outputs.cache-hit != 'true'
-    #           run: npm ci
-    #         - name: Lint the code
-    #           run: npm run lint
+    Lint:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Gert the code
+              uses: actions/checkout@v3
+            - name: Cache the dependencies
+              id: cache
+              uses: actions/cache@v3
+              with:
+                path: node_modules
+                key: deps-node-module-${{ hashFiles('**/package-lock.json') }}
+            - name: Install the dependencies
+              if: steps.cache.outputs.cache-hit != 'true'
+              run: npm ci
+            - name: Lint the code
+              run: npm run lint
 
     Test:
         runs-on: ubuntu-latest
