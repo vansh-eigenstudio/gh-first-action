@@ -1,15 +1,28 @@
 name: 'Get and install the dependencies'
 description: 'Caches and installs dependencies'
+inputs:
+  caching:
+    description: 'Whether to cache dependencies'
+    required: false
+    default: 'true'
+outputs:
+  used-cache:
+    description: 'Whether cache was used'
+    value: ${{ steps.install.outputs.cache-used }}
 runs:
   using: 'composite'
   steps:
     - name: Cache dependencies
+      if: inputs.caching == 'true'
       id: cache
       uses: actions/cache@v3
       with:
         path: node_modules
         key: deps-node-module-${{ hashFiles('**/package-lock.json') }}
     - name: Install the dependencies
-      if: steps.cache.outputs.cache-hit != 'true'
-      run: npm ci
+      id: install
+      if: steps.cache.outputs.cache-hit != 'true' || inputs.caching == 'false'
+      run: |
+          npm ci
+          echo "cache-used=${{ inputs.caching }}" >> $GITHUB_OUTPUT
       shell: bash
