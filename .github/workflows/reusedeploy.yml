@@ -7,17 +7,10 @@ on:
                 required: true
                 default: dist
                 type: string
-        outputs:
-            results:
-                description: 'The result of the deployment'
-                value: ${{ jobs.Deploy.outputs.resultsss }}
 jobs:
     Deploy:
-        outputs:
-            resultsss: ${{ steps.set-res.outputs.set-result }}
-
-        runs-on: ubuntu-latest
-        steps:
+       runs-on: ubuntu-latest
+       steps:
             - name: Download the artifacts
               uses: actions/download-artifact@v4
               with:
@@ -35,6 +28,3 @@ jobs:
             - name: Output info
               run: |
                    echo "Live url : ${{ steps.deploy-step.outputs.deploy-url }}"
-            - name: Deploy Result
-              id: set-res
-              run: echo "set-result=success">>$GITHUB_OUTPUT
