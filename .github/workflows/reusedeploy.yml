@@ -7,6 +7,10 @@ on:
                 required: true
                 default: dist
                 type: string
+        outputs:
+            results:
+                description: 'The result of the deployment'
+                value: ${{ jobs.Deploy.outputs.resultsss }}
 jobs:
     Deploy:
         outputs:
