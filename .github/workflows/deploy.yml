@@ -52,6 +52,8 @@ jobs:
                 name: dist-files
                 path: dist
     Deploy:
+        outputs:
+            results: ${{ steps.deploy-step.outputs.results }}
         needs: Build
         runs-on: ubuntu-latest
         steps:
@@ -75,17 +77,9 @@ jobs:
             - name: Output info
               run: |
                    echo "Live url : ${{ steps.deploy-step.outputs.deploy-url }}"  
-    # print_deploy_result:
-    #     needs: Deploy
-    #     runs-on: ubuntu-latest
-    #     steps:
-    #         - name: Print the deploy result
-    #           run: echo "Deployment result is ${{ needs.Deploy.outputs.result }}"
-    # information:
-    #     needs: Deploy
-    #     runs-on: ubuntu-latest
-    #     steps:
-    #         - name: Get the code
-    #           uses: actions/checkout@v3
-    #         - name: Run custom js action
-    #           uses: ./.github/actions/deploy-s3-js
+    print_deploy_result:
+        needs: Deploy
+        runs-on: ubuntu-latest
+        steps:
+            - name: Print the deploy result
+              run: echo "Deployment result is ${{ needs.Deploy.outputs.results }}"
