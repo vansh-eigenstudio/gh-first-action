@@ -37,10 +37,17 @@ jobs:
               if: steps.cache.outputs.cache-hit != 'true'
               run: npm ci
             - name: Test the code
+              id: test-step
               run: npm run test
+            - name: Upload test results
+              if: failure() && steps.test-step.outcome == 'failure'
+              uses: actions/upload-artifact@v4
+              with:
+                name: test-results
+                path: test.json
     Build:
         needs: Test
-        runs-on: Ubuntu-latest
+        runs-on: ubuntu-latest
         steps:
             - name: Get the code
               uses: actions/checkout@v3
