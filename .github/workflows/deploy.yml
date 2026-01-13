@@ -8,17 +8,10 @@ jobs:
     Lint:
         runs-on: ubuntu-latest
         steps:
-            - name: Gert the code
+            - name: Get the code
               uses: actions/checkout@v3
-            - name: Cache the dependencies
-              id: cache
-              uses: actions/cache@v3
-              with:
-                path: node_modules
-                key: deps-node-module-${{ hashFiles('**/package-lock.json') }}
-            - name: Install the dependencies
-              if: steps.cache.outputs.cache-hit != 'true'
-              run: npm ci
+            - name: Load cache the dependencies
+              uses: ./.github/actions/cached-deps
             - name: Lint the code
               run: npm run lint
 
@@ -27,15 +20,8 @@ jobs:
         steps:
             - name: Get the code
               uses: actions/checkout@v3
-            - name: Cache the dependencies
-              id: cache
-              uses: actions/cache@v3
-              with:
-                path: node_modules
-                key: deps-node-module-${{ hashFiles('**/package-lock.json') }}
-            - name: Install the dependencies
-              if: steps.cache.outputs.cache-hit != 'true'
-              run: npm ci
+            - name: Load cache the dependencies
+              uses: ./.github/actions/cached-deps
             - name: Test the code
               id: test-step
               run: npm run test
@@ -51,15 +37,8 @@ jobs:
         steps:
             - name: Get the code
               uses: actions/checkout@v3
-            - name: Cache dependencies
-              id: cache
-              uses: actions/cache@v3
-              with:
-                path: node_modules
-                key: deps-node-module-${{ hashFiles('**/package-lock.json') }}
-            - name: Install the dependencies
-              if: steps.cache.outputs.cache-hit != 'true'
-              run: npm ci
+            - name: Load cache the dependencies
+              uses: ./.github/actions/cached-deps
             - name: Build the code
               run: npm run build
             - name: Upload the artifacts
