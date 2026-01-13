@@ -62,3 +62,8 @@ jobs:
         steps:
             - name: Print the deploy result
               run: echo "Deployment result is ${{ needs.Deploy.outputs.result }}"
+    information:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Run custom js action
+              uses: ./.github/actions/deploy-s3-js
