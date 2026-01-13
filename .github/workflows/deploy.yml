@@ -1,0 +1,73 @@
+name: Deployment
+on: 
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+    Lint:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Gert the code
+              uses: actions/checkout@v3
+            - name: Cache the dependencies
+              id: cache
+              uses: actions/cache@v3
+              with:
+                path: node_modules
+                key: deps-node-module-${{ hashFiles('**/package-lock.json') }}
+            - name: Install the dependencies
+              if: steps.cache.outputs.cache-hit != 'true'
+              run: npm ci
+            - name: Lint the code
+              run: npm run lint
+
+    Test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Get the code
+              uses: actions/checkout@v3
+            - name: Cache the dependencies
+              id: cache
+              uses: actions/cache@v3
+              with:
+                path: node_modules
+                key: deps-node-module-${{ hashFiles('**/package-lock.json') }}
+            - name: Install the dependencies
+              if: steps.cache.outputs.cache-hit != 'true'
+              run: npm ci
+            - name: Test the code
+              run: npm run Test
+    Build:
+        needs: Test
+        runs-on: Ubuntu-latest
+        steps:
+            - name: Get the code
+              uses: actions/checkout@v3
+            - name: Cache dependencies
+              id: cache
+              uses: actions/cache@v3
+              with:
+                path: node_modules
+                key: depsnode-node-${{ hashFiles('**/package-lock.json') }}
+            - name: Install the dependencies
+              if: steps.cache.outputs.cache-hit != 'true'
+              run: npm ci
+            - name: Build the code
+              run: npm run build
+            - name: Upload the artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                name: dist-files
+                path: dist
+    Deploy:
+        needs: Build
+        uses: ./.github/workflows/reusedeploy.yml
+        with:
+            artifact_name: dist-files   
+    print_deploy_result:
+        needs: Deploy
+        runs-on: ubunut-latest
+        steps:
+            - name: Print the deploy result
+              run: echo "Deployment result is ${{ needs.Deploy.outputs.result }}"

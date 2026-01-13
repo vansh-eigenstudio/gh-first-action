@@ -1,0 +1,30 @@
+name: Reusing the deploy part
+on: 
+    workflow_call:
+        inputs:
+            artifact_name:
+                description: 'Downloading the build artifact'
+                required: true
+                default: dist
+                type: string
+        outputs:
+            result:
+                description: "Result of the deployment"
+                value: ${{ jobs.Deploy.outputs.resultsss }}
+
+jobs:
+    Deploy:
+        outputs:
+            resultsss: ${{ steps.set-res.outputs.STEP-result }}
+
+        runs-on: ubuntu-latest
+        steps:
+            - name: Download the artifacts
+              uses: actions/download-artifact@v4
+              with:
+                name: ${{ inputs.artifact_name }}
+            - name: Deploy
+              run: echo "Deployed to the server" 
+            - name: Display the result
+              id: set-res
+              run: echo "STEP-result==success ">> $GITHUB_OUTPUT
