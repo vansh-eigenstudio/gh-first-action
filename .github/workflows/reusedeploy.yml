@@ -24,7 +24,14 @@ jobs:
               with:
                 name: ${{ inputs.artifact_name }}
             - name: Deploy
-              run: echo "Deployed to the server" 
+              uses: ./.github/actions/deploy-s3-js
+              env:
+                AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+              with:
+                    bucket: 'my-unique-bucket-name-12345' #required
+                    bucket-region: 'us-east-1'
+                    dist-folder: './dist' #required
             - name: Display the result
               id: set-res
               run: echo "STEP-result==success ">> $GITHUB_OUTPUT
